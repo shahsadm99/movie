@@ -3,7 +3,10 @@ package io.shahsad.moviecatalogservices.resources;
 import io.shahsad.moviecatalogservices.models.CatalogItem;
 import io.shahsad.moviecatalogservices.models.Movie;
 import io.shahsad.moviecatalogservices.models.Rating;
+import io.shahsad.moviecatalogservices.models.UserRating;
+import org.apache.catalina.filters.AddDefaultCharsetFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,9 @@ public class MovieCatalogResource {
     private RestTemplate restTemplate;
     @RequestMapping("/{userId}")
 
+    //@Autowired
+   // @Autowired
+    //WebClient.Builder webClientBuilder;
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId){
 
         /// Removing since bean will inject the instance, Autowire is the consumer
@@ -29,13 +35,11 @@ public class MovieCatalogResource {
         //RestTemplate restTemplate = new RestTemplate();
         //restTemplate.getForObject("http://localhost:8082/movies/o", Movie.class);
 
-        List<Rating> ratings = Arrays.asList(
-                new Rating("test1",4),
-                new Rating("test2",3),
-                new Rating("test3",5)
-        );
+        UserRating ratings = restTemplate.getForObject("http://localhost:8081/ratingsdata/users/"+userId, UserRating.class);
+        ///ParameterizedTypeReference< ResponseWrapper<T>>(){} Can be used to pass list
 
-        return ratings.stream().map(rating -> {
+
+        return ratings.getUserRating().stream().map(rating -> {
                     Movie movie= restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
 
                     return new CatalogItem(movie.getName(), "Test", rating.getRating());
