@@ -12,21 +12,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/ratingsdata")
 public class RatingsDataResource {
-    @RequestMapping("/{movieId}")
+    @RequestMapping("/movies/{movieId}")
     public Rating getRating(@PathVariable("movieId") String movieId){
         return new  Rating(movieId,4);
     }
 
-    @RequestMapping("users/{userId}")
+    @RequestMapping("/user/{userId}")
     public UserRating getUserRating(@PathVariable("userId") String userId){
-        List<Rating> ratings = Arrays.asList(
+        /*List<Rating> ratings = Arrays.asList(
                 new Rating("test1",4),
                 new Rating("test2",3),
                 new Rating("test3",5)
         );
         UserRating userRating = new UserRating();
         userRating.setUserRating(ratings);
+        return userRating;*/
+        UserRating userRating = new UserRating();
+        userRating.initData(userId);
         return userRating;
+
 
 
     }
