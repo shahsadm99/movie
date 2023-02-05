@@ -35,12 +35,12 @@ public class MovieCatalogResource {
         //RestTemplate restTemplate = new RestTemplate();
         //restTemplate.getForObject("http://localhost:8082/movies/o", Movie.class);
 
-        UserRating ratings = restTemplate.getForObject("http://localhost:8081/ratingsdata/users/"+userId, UserRating.class);
+        UserRating ratings = restTemplate.getForObject("http://movie-data-service/ratingsdata/users/"+userId, UserRating.class);
         ///ParameterizedTypeReference< ResponseWrapper<T>>(){} Can be used to pass list
 
 
         return ratings.getUserRating().stream().map(rating -> {
-                    Movie movie= restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
+                    Movie movie= restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 
                     return new CatalogItem(movie.getName(), "Test", rating.getRating());
                 } )
